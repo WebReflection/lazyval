@@ -7,7 +7,45 @@ A simple function to define lazy properties to a generic object or a prototype.
 
 There's nothing special on this function except it solves problem with older Android phones and IE9 Mobile and it's compatible with mostly every browser or engine out there.
 
-### examples via inheritance
+
+### function signature
+
+```js
+// returns the generic Object
+lazyval(
+  // where to define the lazy property
+  // can be object or a prototype
+  generic:Object,
+  // the property name
+  property:String,
+  // the callback to invoke once
+  // the generic object or any inherited one
+  // will access this property
+  callback:Function
+  // this callback will be invoked inside the getter as:
+  //  callback.call(this, property, generic);
+  // and its returned value will be assigned
+);
+```
+
+
+### lazy examples via object
+
+```js
+var o = lazyval({}, {
+  uid: function () {
+    return 'object:' + Math.round(
+      Math.random() * Date.now()
+    );
+  }
+});
+
+// only once needed ...
+o.uid; // object:27364279
+```
+
+
+### lazy examples via inheritance
 
 ```js
 function A() {}
@@ -18,6 +56,8 @@ lazyval(
     // do expensive computation here
     // as example ...
     return Math.random();
+    // return the value to lazily assign
+    // as property name of the object
   }
 );
 
