@@ -26,10 +26,22 @@ lazyval(
   //  callback.call(this, property, generic);
   // and its returned value will be assigned
 );
+
+
+// for multiple lazy properties at once
+lazyval(
+  // where to define the lazy property
+  // can be object or a prototype
+  generic:Object,
+  // a key/value pair where value
+  // will be function to lazily invoke
+  // once accessed through properties
+  properties:Object
+);
 ```
 
 
-### lazy examples via object
+### lazy examples via object and properties
 
 ```js
 var o = lazyval({}, {
@@ -45,7 +57,7 @@ o.uid; // object:27364279
 ```
 
 
-### lazy examples via inheritance
+### lazy examples via inheritance and 3 arguments
 
 ```js
 function A() {}
