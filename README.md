@@ -5,7 +5,7 @@ lazyval
 
 A simple function to define lazy properties to a generic object or a prototype.
 
-There's nothing special on this function except it solves problem with older Android phones and IE9 Mobile and it's compatible with mostly every browser or engine out there.
+There's nothing special on this function except it solves problem with older Android phones and IE9 Mobile and it's compatible with mostly every browser or engine out there, [feel free to test it](http://webreflection.github.io/lazyval/test/).
 
 
 ### function signature

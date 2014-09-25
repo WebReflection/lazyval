@@ -124,4 +124,5 @@ var lazyval = lazyval || (function (Object) {
 
   return lazyval;
 
-}(Object));module.exports = lazyval;
+}(Object));
+module.exports = lazyval;
