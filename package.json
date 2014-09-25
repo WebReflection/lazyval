@@ -1,13 +1,17 @@
 {
-  "version": "0.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "name": "lazyval",
-  "description": "",
+  "description": "A simple function to define lazy properties",
   "homepage": "https://github.com/WebReflection/lazyval",
-  "keywords": [],
+  "keywords": [
+    "lazy",
+    "property",
+    "inheritance"
+  ],
   "author": {
-    "name": "",
-    "web": ""
+    "name": "Andrea Giammarchi",
+    "web": "http://webreflection.blogspot.com/"
   },
   "repository": {
     "type": "git",
