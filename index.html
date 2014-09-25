@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Lazyval by WebReflection</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Lazyval</h1>
+        <p>A simple function to define lazy properties</p>
+        <p class="view"><a href="https://github.com/WebReflection/lazyval">View the Project on GitHub <small>WebReflection/lazyval</small></a></p>
+        <ul>
+          <li><a href="https://github.com/WebReflection/lazyval/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/WebReflection/lazyval/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/WebReflection/lazyval">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>
+<a name="lazyval" class="anchor" href="#lazyval"><span class="octicon octicon-link"></span></a>lazyval</h1>
+
+<p><a href="http://travis-ci.org/WebReflection/lazyval"><img src="https://secure.travis-ci.org/WebReflection/lazyval.png" alt="build status"></a></p>
+
+<p>A simple function to define lazy properties to a generic object or a prototype.</p>
+
+<p>There's nothing special on this function except it solves problem with older Android phones and IE9 Mobile and it's compatible with mostly every browser or engine out there.</p>
+
+<h3>
+<a name="function-signature" class="anchor" href="#function-signature"><span class="octicon octicon-link"></span></a>function signature</h3>
+
+<div class="highlight highlight-js"><pre><span class="c1">// returns the generic Object</span>
+<span class="nx">lazyval</span><span class="p">(</span>
+  <span class="c1">// where to define the lazy property</span>
+  <span class="c1">// can be object or a prototype</span>
+  <span class="nx">generic</span><span class="o">:</span><span class="nb">Object</span><span class="p">,</span>
+  <span class="c1">// the property name</span>
+  <span class="nx">property</span><span class="o">:</span><span class="nb">String</span><span class="p">,</span>
+  <span class="c1">// the callback to invoke once</span>
+  <span class="c1">// the generic object or any inherited one</span>
+  <span class="c1">// will access this property</span>
+  <span class="nx">callback</span><span class="o">:</span><span class="nb">Function</span>
+  <span class="c1">// this callback will be invoked inside the getter as:</span>
+  <span class="c1">//  callback.call(this, property, generic);</span>
+  <span class="c1">// and its returned value will be assigned</span>
+<span class="p">);</span>
+</pre></div>
+
+<h3>
+<a name="lazy-examples-via-object" class="anchor" href="#lazy-examples-via-object"><span class="octicon octicon-link"></span></a>lazy examples via object</h3>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">o</span> <span class="o">=</span> <span class="nx">lazyval</span><span class="p">({},</span> <span class="p">{</span>
+  <span class="nx">uid</span><span class="o">:</span> <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s1">'object:'</span> <span class="o">+</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span>
+      <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">()</span> <span class="o">*</span> <span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">()</span>
+    <span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="c1">// only once needed ...</span>
+<span class="nx">o</span><span class="p">.</span><span class="nx">uid</span><span class="p">;</span> <span class="c1">// object:27364279</span>
+</pre></div>
+
+<h3>
+<a name="lazy-examples-via-inheritance" class="anchor" href="#lazy-examples-via-inheritance"><span class="octicon octicon-link"></span></a>lazy examples via inheritance</h3>
+
+<div class="highlight highlight-js"><pre><span class="kd">function</span> <span class="nx">A</span><span class="p">()</span> <span class="p">{}</span>
+<span class="nx">lazyval</span><span class="p">(</span>
+  <span class="nx">A</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span>
+  <span class="s1">'expensive'</span><span class="p">,</span>
+  <span class="kd">function</span> <span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// do expensive computation here</span>
+    <span class="c1">// as example ...</span>
+    <span class="k">return</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">();</span>
+    <span class="c1">// return the value to lazily assign</span>
+    <span class="c1">// as property name of the object</span>
+  <span class="p">}</span>
+<span class="p">);</span>
+
+<span class="kd">var</span>
+  <span class="nx">a1</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">A</span><span class="p">,</span>
+  <span class="nx">a2</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">A</span>
+<span class="p">;</span>
+
+<span class="nx">a1</span><span class="p">.</span><span class="nx">expensive</span><span class="p">;</span> <span class="c1">// 0.346731865</span>
+<span class="nx">a1</span><span class="p">.</span><span class="nx">expensive</span> <span class="o">===</span> <span class="nx">a1</span><span class="p">.</span><span class="nx">expensive</span><span class="p">;</span> <span class="c1">// true</span>
+<span class="nx">a2</span><span class="p">.</span><span class="nx">expensive</span> <span class="o">===</span> <span class="nx">a1</span><span class="p">.</span><span class="nx">expensive</span><span class="p">;</span> <span class="c1">// false</span>
+<span class="nx">a2</span><span class="p">.</span><span class="nx">expensive</span><span class="p">;</span> <span class="c1">// 0.874216789</span>
+
+<span class="c1">// clean up</span>
+<span class="k">delete</span> <span class="nx">a1</span><span class="p">.</span><span class="nx">expensive</span><span class="p">;</span>
+<span class="nx">a1</span><span class="p">.</span><span class="nx">expensive</span><span class="p">;</span> <span class="c1">// 0.4567891</span>
+<span class="nx">a1</span><span class="p">.</span><span class="nx">expensive</span> <span class="o">===</span> <span class="nx">a1</span><span class="p">.</span><span class="nx">expensive</span><span class="p">;</span> <span class="c1">// true</span>
+</pre></div>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/WebReflection">WebReflection</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
