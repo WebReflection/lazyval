@@ -7,6 +7,8 @@ wru.test([
     name: 'main',
     test: function () {
       wru.assert(typeof lazyval == 'function');
+      wru.assert(typeof lazyval.direct == 'function');
+      wru.assert(typeof lazyval.proto == 'function');
       // wru.assert(0);
     }
   },{
@@ -85,6 +87,37 @@ wru.test([
       lazyval(Base.prototype, 'random', function () {
         return Math.random();
       });
+      wru.assert('once reached via inheritance the value is the expected', /^0\.\d+$/.test(o.random));
+      wru.assert('and it is different from before', random !== o.random);
+      random = Base.prototype.random;
+      delete Base.prototype.random;
+      wru.assert('object has its own property', /^0\.\d+$/.test(o.random));
+      wru.assert('and it is different from the other', random !== o.random);
+    }
+  }, {
+    name: 'inherited and inheritee as lazyval.proto',
+    test: function () {
+      function Base() {}
+      lazyval.proto(Base.prototype, 'random', function () {
+        return Math.random();
+      });
+      var o = new Base;
+      var random;
+      var callback;
+      wru.assert('accessing the proto object does not affect instances', Base.prototype.random !== o.random);
+      wru.assert('the value is the expected',
+        typeof Base.prototype.random === 'function' && /^0\.\d+$/.test(o.random)
+      );
+      callback = Base.prototype.random;
+      random = o.random;
+      lazyval(Base.prototype, 'random', function () {
+        return Math.random();
+      });
+      wru.assert('we can reassign the property', Base.prototype.random !== callback);
+      lazyval(Base.prototype, 'random', function () {
+        return Math.random();
+      });
+      delete o.random;
       wru.assert('once reached via inheritance the value is the expected', /^0\.\d+$/.test(o.random));
       wru.assert('and it is different from before', random !== o.random);
       random = Base.prototype.random;

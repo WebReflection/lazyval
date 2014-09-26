@@ -3,14 +3,15 @@ lazyval
 
 [![build status](https://secure.travis-ci.org/WebReflection/lazyval.png)](http://travis-ci.org/WebReflection/lazyval)
 
-A simple function to define lazy properties to a generic object or a prototype.
+A simple way to define lazy properties to a generic object or a prototype.
 
-There's nothing special on this function except it solves problem with older Android phones and IE9 Mobile and it's compatible with mostly every browser or engine out there, [feel free to test it](http://webreflection.github.io/lazyval/test/).
+Compatible with mostly every browser or engine out there: [feel free to test it](http://webreflection.github.io/lazyval/test/).
 
 
 ### function signature
 
 ```js
+lazyval({}, 'key', function () { return value; });
 // returns the generic Object
 lazyval(
   // where to define the lazy property
@@ -28,6 +29,10 @@ lazyval(
 );
 
 
+lazyval({}, {
+  key1: function () { return value1; },
+  key2: function () { return value2; }
+});
 // for multiple lazy properties at once
 lazyval(
   // where to define the lazy property
@@ -61,7 +66,9 @@ o.uid; // object:27364279
 
 ```js
 function A() {}
-lazyval(
+
+// note lazyval.proto
+lazyval.proto(
   A.prototype,
   'expensive',
   function () {
@@ -88,3 +95,9 @@ delete a1.expensive;
 a1.expensive; // 0.4567891
 a1.expensive === a1.expensive; // true
 ```
+
+#### lazyval.direct VS lazyval.proto
+The difference is that `lazyval.proto` will not actually replace at runtime the property to the prototype object itself but only to inheriting isntances. `lazyval.direct` is somehow more greedy here because an access to the prototype object could affect all inherited instances.
+
+For classes and prototypal inheritance, `lazyval.proto` is recommended.
+

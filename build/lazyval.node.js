@@ -31,7 +31,7 @@ var lazyval = lazyval || (function (Object) {
     getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor,
     hasOwnProperty = Object.hasOwnProperty,
 
-    lazyProperty = function (object, property, callback) {
+    lazyProperty = function (object, property, callback, isPrototype) {
       // only if configurable and also
       // in case it was previously configured
       if (delete object[property]) {
@@ -41,13 +41,20 @@ var lazyval = lazyval || (function (Object) {
             var
               self = this,
               proto = self,
-              // invoke the callback with this context
-              // and the property used for this descriptor
-              // plus the object where the initial lazy value
-              // was defined (usually the prototype)
-              value = callback.call(self, property, object),
+              value,
               desc
             ;
+            // in case it has been set as prototype
+            // we don't want to set a lazy value
+            // to every inherited instance
+            if (isPrototype && self === object) {
+              return callback;
+            }
+            // invoke the callback with this context
+            // and the property used for this descriptor
+            // plus the object where the initial lazy value
+            // was defined (usually the prototype)
+            value = callback.call(self, property, object);
             // in case it's a buggy engine and
             // the descriptor wasn't just copied somewhere else
             // ( ignored by all modern browsers )
@@ -85,18 +92,25 @@ var lazyval = lazyval || (function (Object) {
     }
   ;
 
-  function lazyProperties(object, properties) {
+  function lazyProperties(object, properties, isPrototype) {
     for(var property in properties) {
       if (hasOwnProperty.call(properties, property)) {
-        lazyProperty(object, property, properties[property]);
+        lazyProperty(object, property, properties[property], isPrototype);
       }
     }
   }
 
+  function lazyproto(proto, property, callback) {
+    return (arguments.length === 1 ?
+              lazyProperties(proto, property, true) :
+              lazyProperty(proto, property, callback, true)
+            ), proto;
+  }
+
   function lazyval(object, property, callback) {
     return (arguments.length === 1 ?
-              lazyProperties(object, property) :
-              lazyProperty(object, property, callback)
+              lazyProperties(object, property, false) :
+              lazyProperty(object, property, callback, false)
             ), object;
   }
 
@@ -121,6 +135,9 @@ var lazyval = lazyval || (function (Object) {
     }
 
   }
+
+  lazyval.direct = lazyval;
+  lazyval.proto = lazyproto;
 
   return lazyval;
 
