@@ -74,6 +74,8 @@ var lazyval = lazyval || (function (Object) {
             defineProperty(self, property, {
               // making it configurable
               configurable: true,
+              // and making it own property
+              enumerable: true,
               value: value
             });
             // in case it's buggy and the removed descriptor
