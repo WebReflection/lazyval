@@ -125,5 +125,18 @@ wru.test([
       wru.assert('object has its own property', /^0\.\d+$/.test(o.random));
       wru.assert('and it is different from the other', random !== o.random);
     }
+  }, {
+    name: 'properties instead of proto',
+    test: function () {
+      var o = lazyval({}, {
+        a: function () {
+          return 1;
+        },
+        b: function () {
+          return 2;
+        }
+      });
+      wru.assert(3 === o.a + o.b);
+    }
   }
 ]);

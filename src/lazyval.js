@@ -79,16 +79,16 @@ var lazyval = lazyval || (function (Object) {
   }
 
   function lazyproto(proto, property, callback) {
-    return (arguments.length === 1 ?
-              lazyProperties(proto, property, true) :
-              lazyProperty(proto, property, callback, true)
+    return (callback ?
+              lazyProperty(proto, property, callback, true) :
+              lazyProperties(proto, property, true)
             ), proto;
   }
 
   function lazyval(object, property, callback) {
-    return (arguments.length === 1 ?
-              lazyProperties(object, property, false) :
-              lazyProperty(object, property, callback, false)
+    return (callback ?
+              lazyProperty(object, property, callback, false) :
+              lazyProperties(object, property, false)
             ), object;
   }
 
