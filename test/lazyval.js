@@ -9,9 +9,8 @@ wru.test([
       wru.assert(typeof lazyval == 'function');
       wru.assert(typeof lazyval.direct == 'function');
       wru.assert(typeof lazyval.proto == 'function');
-      // wru.assert(0);
     }
-  },{
+  }, {
     name: 'basic object test',
     test: function () {
       var o = {};
@@ -22,6 +21,7 @@ wru.test([
         return Math.random();
       });
       wru.assert('until reached, nothing happens', i === 0);
+      wru.assert('reached many times does not affect the value', o.random === o.random);
       random = o.random;
       wru.assert('once reached, the value is the expected', /^0\.\d+$/.test(random));
       wru.assert('reached many times does not affect the value', o.random === o.random);
@@ -137,6 +137,28 @@ wru.test([
         }
       });
       wru.assert(3 === o.a + o.b);
+    }
+  }, {
+    name: 'enumerable VS non enumearble property',
+    test: function () {
+      var gOPD = Object.getOwnPropertyDescriptor;
+      var o = {};
+      lazyval(o, 'a', function () { return 1; });
+      lazyval(o, 'b', function () { return 2; }, true);
+      wru.assert('values are OK in both cases', o.a === 1 && o.b === 2);
+      wru.assert('default is not enumerable', !gOPD(o, 'a').enumerable);
+      wru.assert('but it can be enumerable', gOPD(o, 'b').enumerable);
+    }
+  }, {
+    name: 'enumerable VS non enumearble properties',
+    test: function () {
+      var gOPD = Object.getOwnPropertyDescriptor;
+      var o = {};
+      lazyval(o, {a: function () { return 1; }});
+      lazyval(o, {b: function () { return 2; }}, true);
+      wru.assert('values are OK in both cases', o.a === 1 && o.b === 2);
+      wru.assert('default is not enumerable', !gOPD(o, 'a').enumerable);
+      wru.assert('but it can be enumerable', gOPD(o, 'b').enumerable);
     }
   }
 ]);
